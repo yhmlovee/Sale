@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Closet Sale · Me mudo</title>
+  <meta name="description" content="Closet sale de mudanza — ropa, casa y más.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">PRE-MUDANZA · SANTIAGO</p>
+      <h1>Me mudo y<br><em>lo vendo todo.</em></h1>
+      <p class="intro">Ropa, zapatos, accesorios, cosas de casa y todo lo que ya no se viene conmigo 🧳</p>
+      <div class="hero-actions">
+        <a class="button dark" href="#productos">Ver productos</a>
+        <a class="button light" href="https://wa.me/569XXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+      <p class="tiny">Actualizado: <span id="updated"></span></p>
+    </div>
+  </header>
+
+  <main>
+    <section class="toolbar" id="productos">
+      <div>
+        <p class="section-kicker">EL MERCADILLO</p>
+        <h2>Todo lo que queda</h2>
+      </div>
+      <div class="controls">
+        <input id="search" type="search" placeholder="Buscar..." aria-label="Buscar productos">
+        <select id="category" aria-label="Filtrar por categoría">
+          <option value="all">Todas</option>
+        </select>
+        <select id="status" aria-label="Filtrar por estado">
+          <option value="available">Disponibles</option>
+          <option value="all">Todos</option>
+          <option value="reserved">Reservados</option>
+          <option value="sold">Vendidos</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="grid" id="grid"></section>
+    <p class="empty" id="empty" hidden>No encuentro nada con esos filtros 😭</p>
+  </main>
+
+  <footer>
+    <div>
+      <strong>ME MUDO Y LO VENDO TODO.</strong>
+      <span>Si quieres algo, escríbeme indicando el nombre del producto.</span>
+    </div>
+    <a href="https://wa.me/569XXXXXXXX" target="_blank" rel="noopener">Contactar →</a>
+  </footer>
+
+<script>
+const WHATSAPP = "569XXXXXXXX"; // ← cambia esto por tu número, sin + ni espacios
+
+// =====================================================
+// PRODUCTOS: aquí vas a añadir/modificar tus cosas.
+// Para una foto, pon el archivo dentro de /images/.
+// =====================================================
+const products = [
+  {
+    id: "vestido-negro",
+    name: "Vestido negro",
+    category: "Ropa",
+    price: 15000,
+    size: "M",
+    condition: "Muy buen estado",
+    status: "available",
+    image: "images/vestido-negro.svg"
+  },
+  {
+    id: "chaqueta",
+    name: "Chaqueta",
+    category: "Ropa",
+    price: 18000,
+    size: "M",
+    condition: "Buen estado",
+    status: "available",
+    image: "images/chaqueta.svg"
+  },
+  {
+    id: "bolso",
+    name: "Bolso",
+    category: "Accesorios",
+    price: 12000,
+    size: "",
+    condition: "Muy buen estado",
+    status: "reserved",
+    image: "images/bolso.svg"
+  },
+  {
+    id: "lampara",
+    name: "Lámpara",
+    category: "Casa",
+    price: 10000,
+    size: "",
+    condition: "Buen estado",
+    status: "sold",
+    image: "images/lampara.svg"
+  }
+];
+
+const labels = {
+  available: "Disponible",
+  reserved: "Reservado",
+  sold: "Vendido"
+};
+
+const money = n => new Intl.NumberFormat("es-CL", {
+  style: "currency", currency: "CLP", maximumFractionDigits: 0
+}).format(n);
+
+function waLink(p) {
+  const text = `Hola! Me interesa "${p.name}" de ${money(p.price)}. ¿Sigue disponible?`;
+  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+}
+
+function render() {
+  const q = document.querySelector("#search").value.trim().toLowerCase();
+  const cat = document.querySelector("#category").value;
+  const st = document.querySelector("#status").value;
+
+  const filtered = products.filter(p => {
+    const text = `${p.name} ${p.category} ${p.size} ${p.condition}`.toLowerCase();
+    return (!q || text.includes(q))
+      && (cat === "all" || p.category === cat)
+      && (st === "all" || p.status === st);
+  });
+
+  document.querySelector("#grid").innerHTML = filtered.map(p => `
+    <article class="card ${p.status}">
+      <div class="photo">
+        <img src="${p.image}" alt="${p.name}" loading="lazy"
+             onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
+        <span class="badge ${p.status}">${labels[p.status]}</span>
+      </div>
+      <div class="card-body">
+        <div class="category">${p.category}</div>
+        <h3>${p.name}</h3>
+        <div class="price">${money(p.price)}</div>
+        <div class="details">
+          ${p.size ? `<span>Talla ${p.size}</span>` : ""}
+          <span>${p.condition}</span>
+        </div>
+        ${p.status === "available"
+          ? `<a class="want" href="${waLink(p)}" target="_blank" rel="noopener">Lo quiero →</a>`
+          : `<div class="unavailable">${labels[p.status]}</div>`}
+      </div>
+    </article>
+  `).join("");
+
+  document.querySelector("#empty").hidden = filtered.length !== 0;
+}
+
+const cats = [...new Set(products.map(p => p.category))].sort();
+const categorySelect = document.querySelector("#category");
+cats.forEach(c => categorySelect.insertAdjacentHTML("beforeend", `<option>${c}</option>`));
+
+document.querySelector("#updated").textContent =
+  new Intl.DateTimeFormat("es-CL", {day:"numeric", month:"long", year:"numeric"}).format(new Date());
+
+["search", "category", "status"].forEach(id =>
+  document.querySelector("#"+id).addEventListener("input", render)
+);
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+* { box-sizing: border-box; }
+:root {
+  --ink: #1f1d1b;
+  --muted: #77716b;
+  --paper: #f7f4ef;
+  --card: #fffdf9;
+  --line: #ded8cf;
+  --accent: #d9b7a5;
+}
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "DM Sans", sans-serif;
+}
+.hero {
+  min-height: 72vh;
+  display: grid;
+  place-items: center;
+  padding: 70px 24px;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(217,183,165,.45), transparent 28%),
+    radial-gradient(circle at 85% 80%, rgba(225,216,198,.7), transparent 30%),
+    var(--paper);
+}
+.hero-inner { width: min(900px, 100%); text-align: center; }
+.eyebrow, .section-kicker {
+  font-size: 11px; letter-spacing: .18em; font-weight: 700; color: var(--muted);
+}
+h1 {
+  font: 700 clamp(52px, 10vw, 105px)/.9 "Playfair Display", serif;
+  margin: 18px 0 25px;
+  letter-spacing: -.045em;
+}
+h1 em { font-weight: 600; }
+.intro { max-width: 560px; margin: auto; color: var(--muted); font-size: 17px; line-height: 1.6; }
+.hero-actions { display: flex; justify-content: center; gap: 10px; margin: 30px 0 16px; flex-wrap: wrap; }
+.button {
+  display: inline-block; padding: 13px 22px; border: 1px solid var(--ink);
+  border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 14px;
+}
+.button.dark { background: var(--ink); color: white; }
+.button.light { color: var(--ink); background: transparent; }
+.tiny { font-size: 11px; color: var(--muted); }
+
+main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 75px 0 100px; }
+.toolbar {
+  display: flex; justify-content: space-between; align-items: end; gap: 25px;
+  margin-bottom: 30px; flex-wrap: wrap;
+}
+.toolbar h2 { font: 600 38px/1 "Playfair Display", serif; margin: 5px 0 0; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; }
+input, select {
+  font: inherit; background: var(--card); border: 1px solid var(--line);
+  padding: 11px 13px; border-radius: 10px; color: var(--ink);
+}
+input { width: 170px; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 15px; overflow: hidden; }
+.photo {
+  aspect-ratio: 4/5; background: #e9e4dc; position: relative; overflow: hidden;
+  display: grid; place-items: center;
+}
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+.no-image::after { content: "FOTO"; font-size: 12px; letter-spacing: .15em; color: #9a938b; }
+.badge {
+  position: absolute; top: 12px; left: 12px; padding: 6px 9px; border-radius: 999px;
+  background: rgba(255,253,249,.94); font-size: 10px; text-transform: uppercase;
+  letter-spacing: .08em; font-weight: 700;
+}
+.badge.sold { text-decoration: line-through; opacity: .8; }
+.card-body { padding: 16px; }
+.category { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .14em; }
+h3 { margin: 6px 0 3px; font-size: 16px; }
+.price { font-size: 18px; font-weight: 700; }
+.details { display: flex; gap: 8px; flex-wrap: wrap; color: var(--muted); font-size: 12px; margin: 9px 0 15px; }
+.details span + span::before { content: "·"; margin-right: 8px; }
+.want {
+  display: block; padding: 10px; text-align: center; border-radius: 8px;
+  background: var(--ink); color: white; text-decoration: none; font-size: 12px; font-weight: 700;
+}
+.unavailable {
+  padding: 10px; text-align: center; border: 1px solid var(--line); border-radius: 8px;
+  color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase;
+}
+.card.sold { opacity: .58; }
+.empty { text-align: center; color: var(--muted); padding: 70px 0; }
+footer {
+  border-top: 1px solid var(--line); padding: 35px max(20px, calc((100% - 1180px)/2));
+  display: flex; justify-content: space-between; gap: 20px; align-items: center;
+}
+footer div { display: grid; gap: 5px; }
+footer span { color: var(--muted); font-size: 12px; }
+footer a { color: var(--ink); font-weight: 700; text-decoration: none; }
+
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 650px) {
+  .hero { min-height: 78vh; padding: 50px 20px; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  main { width: min(100% - 20px, 1180px); padding-top: 50px; }
+  .toolbar h2 { font-size: 31px; }
+  .controls { width: 100%; }
+  input, select { flex: 1; min-width: 0; width: auto; }
+  footer { display: block; }
+  footer a { display: inline-block; margin-top: 18px; }
+}
